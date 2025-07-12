@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Registration Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+            background: #eef2f5;
+            color: #333;
+            margin: 0;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        .exportpdfbtn {
+
+            padding: 10px;
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            float: right
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        td:first-child {
+            font-weight: bold;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 22px;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .success-msg {
+            text-align: center;
+            font-size: 16px;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            font-size: 14px;
+            border-collapse: collapse;
+            background-color: #fafafa;
+        }
+
+        th,
+        td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: linear-gradient(to right, #1a237e, #03adec);
+            color: #fff;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* scroller css start */
+        #hospitalTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #hospitalTable th,
+        #hospitalTable td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .scrollable-body {
+            display: block;
+            max-height: 400px;
+            /* adjust height to show approx. 10 rows */
+            overflow-y: auto;
+        }
+
+        .scrollable-body tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #hospitalTable thead,
+        #hospitalTable tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        #hospitalTable thead {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        /* scroller css end */
+
+        .back-btn {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #303f9f;
+        }
+
+        #hospitalTable {
+            width: 100%;
+            font-size: 14px;
+            border-collapse: collapse;
+            background-color: #fafafa;
+            margin-top: 20px;
+        }
+
+        #hospitalTable th,
+        #hospitalTable td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        #hospitalTable th {
+            background-color: #009688;
+            color: #fff;
+        }
+
+        #hospitalTable td:first-child {
+            font-weight: bold;
+        }
+
+
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            th,
+            td {
+                padding: 8px 10px;
+            }
+
+            .back-btn {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding: 15px;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+
+
+
+
+        .exportpdfbtn:hover {
+            animation: blinkBlue 1s infinite;
+        }
+
+        @keyframes blinkBlue {
+            0% {
+                background-color: #3f51b5;
+                color: #fff;
+            }
+
+            50% {
+                background-color: #2196f3;
+                color: #fff;
+            }
+
+            100% {
+                background-color: #3f51b5;
+                color: #fff;
+            }
+        }
+
+        .back-btn:hover {
+            background-color: #f04a22;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="logo/logo.png" alt="Logo" style="height: 60px; margin-right: 15px;" />
+            <h2>Registration Successful</h2>
+            <div class="success-msg" id="successMsg"></div>
+        </div>
+
+        <button class="exportpdfbtn no-print" style="margin-bottom: 10px;" onclick="exportToPDF()">
+            <i class="fa-solid fa-print"></i> <b> Download PDF</b>
+        </button>
+
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>User Details</th>
+                </tr>
+            </thead>
+            <tbody id="dataDisplay">
+                <!-- Rows will be populated dynamically -->
+            </tbody>
+        </table>
+        <button class="back-btn no-print" onclick="goBack()"><b>⬅ Back to Registration</b></button>
+        <br><br>
+        <div class="scrollable-body">
+            <table id="hospitalTable">
+                <thead>
+                    <tr>
+                        <th>क्र.</th>
+                        <th>हॉस्पिटलचे नाव पत्ता</th>
+                        <th>डॉक्टरांचे नाव</th>
+                        <th>विशेष तज्ञ</th>
+                        <th>सवलतधीन तपशील</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>१</td>
+                        <td>अभ्युदय लाईफ केअर नवा मोंढा, नांदेड</td>
+                        <td>डॉ. श्रीवल्हब कारलेकर</td>
+                        <td>हृदयरोग तज्ञ</td>
+                        <td>OPP- <del>500</del> -400</td>
+                    </tr>
+                    <tr>
+                        <td>२</td>
+                        <td>विवेकानंद बाल रुग्णालय डॉ. लेन स्टैंट जवळ नांदेड</td>
+                        <td>डॉ. बालाप्रसाद धोंडगे</td>
+                        <td>बाल रोग तज्ञ</td>
+                        <td>DD-<del>380</del>-200, Lab -30%, IPD -20%</td>
+                    </tr>
+                    <tr>
+                        <td>३</td>
+                        <td>महींद्रकर चेस्ट हॉस्पिटल डॉ. लेन, नांदेड</td>
+                        <td>डॉ. मृत्युंजय महिंद्रकर</td>
+                        <td>सर्प दंश छाती, दमा विषेश तज्ञ</td>
+                        <td>OPD-<del>300</del>-200, IPD-20%, Lab -20%</td>
+                    </tr>
+                    <tr>
+                        <td>४</td>
+                        <td>फिनीक्स मल्टी स्पेशालीटी हॉस्पिटल गोकुळ नगर, नांदेड</td>
+                        <td>डॉ. अनंत सुर्यवंशी</td>
+                        <td>हृदय रोग तज्ञ, फिजीशियन</td>
+                        <td>OPD-<del>380</del>-200, IPD -20%, 2D-Echo-800, Lab 20%</td>
+                    </tr>
+                    <tr>
+                        <td>५</td>
+                        <td>सर्मथ ऑर्थोपेडीक सेंटर नवा मढा लाईफ केअर जवळ, नांदेड</td>
+                        <td>डॉ. पांचाळ गंगाधर</td>
+                        <td>फॅक्चर तज्ञ</td>
+                        <td>OPD-<del>300</del>-200, IPD -20%, Lab -30%, X-ray -300</td>
+                    </tr>
+                    <tr>
+                        <td>६</td>
+                        <td>आशा हॉस्पिटल पावडेवाडी नाका काबरा नगर, रोड</td>
+                        <td>डॉ. उमेश कोळेकर</td>
+                        <td>ICU फिजीशियन</td>
+                        <td>OPD-<del>380</del>-200, IPD-20%, Lab-30%</td>
+                    </tr>
+                    <tr>
+                        <td>७</td>
+                        <td>भक्ती डायग्नोस्टीक सेंटर डॉ, लेन नांदेड</td>
+                        <td>डॉ. विकास राठोड</td>
+                        <td>सोनोग्राफी डॉपलर, X-ray सेंटर</td>
+                        <td>USG-<del>800</del>-600, USG-<del>1000</del>-800, X-ray <del>400</del>-300</td>
+                    </tr>
+                    <tr>
+                        <td>८</td>
+                        <td>तिरूमला मल्टी स्पे. हॉस्पिटल छत्रपती चौक, नांदेड</td>
+                        <td>डॉ. रातोळीकर</td>
+                        <td>एम.डी मेडीसीन</td>
+                        <td>OPD-<del>380</del>-200, IPD-20%, Lab -20%</td>
+                    </tr>
+                    <tr>
+                        <td>९</td>
+                        <td>मुसांडे पॅथॉलोजी डॉ. लेन डॉ. बोकरे हॉ. च्याखाली</td>
+                        <td>डॉ. राजनीकांत मुसांडे</td>
+                        <td>पॅथॉलोजीस्ट</td>
+                        <td>30% Lab</td>
+                    </tr>
+                    <tr>
+                        <td>१०</td>
+                        <td>आपेक्षा हॉस्पिटल मल्टी स्पेशालीटी डॉ. लेन रेल्वे स्टे. जवळ नांदेड</td>
+                        <td>डॉ. अर्जुन शेळके, डॉ. दिलीप फुगारे</td>
+                        <td>छावी रोग तज्ञ, पोट विकार तज्ञ</td>
+                        <td>OPD-<del>360</del>-200, IPD-20%, X-ray -300, Lab-20%</td>
+                    </tr>
+                    <tr>
+                        <td>११</td>
+                        <td>नवदया हॉस्पिटल</td>
+                        <td>डॉ. श्याम दवणे</td>
+                        <td>फिजीशियन MD -- Med</td>
+                        <td>OPD-<del>380</del>-200, IPD-20%, Lab -20%</td>
+                    </tr>
+                    <tr>
+                        <td>१२</td>
+                        <td>फिजीओ केअर सेंटर</td>
+                        <td>डॉ. राजेंद्र पाटिल</td>
+                        <td>फिजीओ थेरीपीस्ट तज्ञ</td>
+                        <td>OPD-<del>300</del>-200, IPD-20%, Lab-30%</td>
+                    </tr>
+                    <tr>
+                        <td>१३</td>
+                        <td>आपेक्षा हॉस्पिटल जि.प. समोर नांदेड</td>
+                        <td>डॉ. संजय पतंगे, डॉ. शुभांगी पतंगे, डॉ. रेणुका अग्रवाल, डॉ. अंजली पाटिल</td>
+                        <td>कान, नाक, घसा तज्ञ एम, डि, मेडिसीन एम, डि, मेडिसीन स्त्री रोग तज्ञ</td>
+                        <td>OPD-<del>300</del>-200, IPD-20%, Lab -20%</td>
+                    </tr>
+                    <tr>
+                        <td>१४</td>
+                        <td>व्हिजन हॉस्पिटल वडीया फॅक्ट्री शिवाजी नगर, नांदेड</td>
+                        <td>डॉ. सचीन सरोदे, डॉ. रजनीश सुन्नप</td>
+                        <td>एम. डि मेडिसीन, छाती रोग तज्ञ, क्रिटीकल केअर</td>
+                        <td>OPD-<del>300</del>-150, IPD-30-35%, Lab-30%, X-ray <del>480</del>-300</td>
+                    </tr>
+                    <tr>
+                        <td>१५</td>
+                        <td>शिव पॅथॉलॉजी नांदेड. शिवाजी नगर जुणे अंकुर हॉ. बिल्डींग</td>
+                        <td>डॉ. राजेश माने</td>
+                        <td>पॅथॉलोजीस्ट एम.डि</td>
+                        <td>सर्व रक्त तपासण्यावर 30 ते 40% सुट</td>
+                    </tr>
+                    <tr>
+                        <td>१६</td>
+                        <td>डेल्डा हॉस्पिटल नवा मोंढा सम्राट नगर टाऊन मार्केट सोसायटी नांदेड</td>
+                        <td>डॉ. नितीन पाईकराव, डॉ. बळीराम भरके</td>
+                        <td>MS ortho मेडिसीन MD</td>
+                        <td>OPD <del>350</del>-250, IPD-15-20%, Procedure -15.20%, Lab -20%</td>
+                    </tr>
+                    <tr>
+                        <td>१७</td>
+                        <td>मनदर्पन हॉस्पिटल शिवाजी नगर नांदेड</td>
+                        <td>डॉ. रामेशवर बोले, डॉ. मोहित सोलापूरे</td>
+                        <td>मनोविकार तज्ञ</td>
+                        <td>OPD <del>500</del>-400, IPD-20%, Ect (शोंदा)-<del>2000</del>-1500, Lab-20%</td>
+                    </tr>
+                    <tr>
+                        <td>१७</td>
+                        <td>हुजुर साहेब ब्लड बैंक वजीराबाद, नांदेड</td>
+                        <td>श्री मॉन्टीसींग जाहगीरदार</td>
+                        <td>संस्थापक /अध्यक्ष बल्ड बँक</td>
+                        <td>Blood <del>1460</del>-1250</td>
+                    </tr>
+                    <tr>
+                        <td>१८</td>
+                        <td>हुजुर साहेब (स्टोरेज) शिवाजी, नांदेड</td>
+                        <td>श्री मॉन्टीसींग जाहगीरदार</td>
+                        <td>संस्थापक /अध्यक्ष बल्ड बँक</td>
+                        <td>फक्त डायलिसीस रुग्णासाठी 1000/- बॅग</td>
+                    </tr>
+                    <tr>
+                        <td>१९</td>
+                        <td>मॉर्डन पॅथॉलोजी लॅब. शिवाजी नगर नांदेड</td>
+                        <td>डॉ. पद्मावती पल्लेवाड</td>
+                        <td>एम.डि पॉथॉलोजीस्ट</td>
+                        <td>सर्व रक्त तपासण्या 20 ते 30 %</td>
+                    </tr>
+                    <tr>
+                        <td>२०</td>
+                        <td>श्री सिधिविनायक हॉस्पिटल शिवाजी नगर नांदेड</td>
+                        <td>डॉ. विनय मोरे</td>
+                        <td>ट्रॉमा व अॅक्सीडेंट सेंटर</td>
+                        <td>OPD <del>380</del>-250, IPD-20%, Lab-20</td>
+                    </tr>
+                    <tr>
+                        <td>२१</td>
+                        <td>श्री सिधिविनायक मॅटर्ननटी हॉस्पिटल शिवाजी नगर नांदेड</td>
+                        <td>डॉ. स्मीता विनय मोरे</td>
+                        <td>स्त्री रोग तज्ञ</td>
+                        <td>OPD <del>380</del>-200, IPD-20%, डिलेवरी 1200, सिझर -25000/पिशवी काडणे, 25000/-औषधी व मुल सह
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>२२</td>
+                        <td>काकांडीकर मल्टी स्पेशालीटी हॉस्पिटलहिंगोली गेट ब्रिज जवळ, लोकमान्ये मंगल कार्यालय शेजारी
+                            नांदेड</td>
+                        <td>डॉ. बागल माहादजी प्रल्हादराव</td>
+                        <td>फिजीशियन MD</td>
+                        <td>OPD <del>350</del>-200, IPD-20%, Lab-20%, X-ray 300, ऑपरेशन -20% सवलत, शेतकरी व देशाचे जवाण
+                            OPD-100, IPD-1000/-day, ICU-2500/-day</td>
+                    </tr>
+                    <tr>
+                        <td>२३</td>
+                        <td>रेनुकाई क्रिटीकल केअर सेंटर व मल्टी स्पेशालीटी हॉस्पिटल बाफना रोड, एल, आय.सी. ऑफीस जवळ
+                            नांदेड</td>
+                        <td>डॉ. निलेश बास्टेवाड, डॉ. जयराम बास्टेवाड, डॉ. सचिन बलखांडे</td>
+                        <td>कार्डिओलॉजी विभाग, सायकॅट्रीस्ट विभाग, ऑर्थोपेडीक विभाग, युरॉलॉजी विभाग, कान नाक घसा विभाग,
+                            दंत विभाग, न्युरॉलॉजी व न्युरोसर्जरी विभाग, त्वचारोग विभाग, पॅथॉलॉजी विभाग, जनरल सर्जरी व
+                            कर्करोग विभाग, रेडिओलॉजी विभाग, मेडिसीन विभाग, स्त्री रोग विभाग, ऑर्थोपेडीक विभाग (हे सर्व
+                            विभाग जनकल्याण अरोग्य कार्ड अंतर्गत येतील)</td>
+                        <td>OPD <del>350</del>-250, IPD-20%, Angioraphy 4000/-, Angioplasty (मोफत MJPJAY अंतर्गत), Lab
+                            20%, नॉर्मल डिलेव्हरी 10000/-, सिझर 23,000/-, गर्भ पिसवि काढणे 23,000/-, मेडिकल व भुलसह,
+                            डायलेसिस 1200/-, दंत रोगा साठी (डेंटल) 20%</td>
+                    </tr>
+                    <tr>
+                        <td>२४</td>
+                        <td>संजिवनी क्रिटीकल केअर शिवाजी नगर नांदेड</td>
+                        <td>डॉ. प्रल्हाद कोटकर</td>
+                        <td>ICU क्रिटीकल केअर एम.डी मेडिसीन</td>
+                        <td>OPD <del>380</del>-250, IPD-15-%, Angioraphy 20%, Angioplasty (मोफत MJPJAY अंतर्गत), X-ray
+                            15%</td>
+                    </tr>
+                    <tr>
+                        <td>२५</td>
+                        <td>लोटस हॉस्पिटल दुसरा मजला, डॉक्टर्स प्लाझा, डॉक्टर्स लेन, नांदेड</td>
+                        <td>डॉ. संजय पडलवार</td>
+                        <td>ICU तज्ञ MD</td>
+                        <td>OPD <del>380</del>-250, IPD-20%, Angiography 3800, 2D-Echo 800, TMT 800, Dialysis 1100,
+                            X-ray 300, Lab. 30%</td>
+                    </tr>
+                    <tr>
+                        <td>२६</td>
+                        <td>पाटील डायग्नोस्टीक सेंटर नांदेड लोटस हॉस्पिटलच्या खाली</td>
+                        <td>डॉ. गोपीकृष्ण पाटिल</td>
+                        <td>सोनोग्राफी तज्ञ</td>
+                        <td>Abd. Pel. <del>880</del>-600, Obst-<del>1000</del>-800, X-ray. 300</td>
+                    </tr>
+                    <tr>
+                        <td>२७</td>
+                        <td>खडकेकर कान नाक घसा हॉस्पिटल डॉ. लेन चिद्रवार हॉस्पिटल, नांदेड</td>
+                        <td>डॉ. शशीन खडकेकर</td>
+                        <td>कान. नाक घसा तज्ञ (ENT)</td>
+                        <td>OPD <del>380</del>-250, IPD-15-20%, Lab-20%</td>
+                    </tr>
+                    <tr>
+                        <td>२८</td>
+                        <td>खडकेकर कान, नाक, घसा हॉस्पिटल एम.एफ, होंडा शोरूम मसोर नांदेड</td>
+                        <td>डॉ. शशीन खडकेकर</td>
+                        <td>कान. नाक घसा तज्ञ (ENT)</td>
+                        <td>OPD <del>350</del>-250, IPD-15-20%, Lab-20%</td>
+                    </tr>
+                    <tr>
+                        <td>२९</td>
+                        <td>अपेक्षा मल्टीस्पेशालीटी हॉस्पिटल जि.प. समोर, नांदेड</td>
+                        <td>डॉ. शिवराज देशमुख, डॉ. स्वाती देशमुख</td>
+                        <td>दंत रोग तज्ञ Root Canal Spl. दंत रोग तज्ञ</td>
+                        <td>OPD <del>380</del>-200, IPD-20%, Lab-20%</td>
+                    </tr>
+                    <tr>
+                        <td>३०</td>
+                        <td>लाईफ लाईन डायग्नोस्टीक सेंटर डॉ. लेन, नांदेड</td>
+                        <td>डॉ. राजेश अग्रवाल</td>
+                        <td>एम.डी. रेडीओलॉजीस्ट</td>
+                        <td>MRI <del>4000</del>-3000, CT-<del>2000</del>-1500</td>
+                    </tr>
+                    <tr>
+                        <td>३१</td>
+                        <td>तुलसी स्कीन कॉस्मेटीक व लेझर सेंटर, सन्मान प्रे. जि.प.च्या बाजुला</td>
+                        <td>डॉ. चंद्रकांत किसवे (पाटील)</td>
+                        <td>एम.डी. त्वचारोग तज्ञ</td>
+                        <td>OPD <del>380</del>-250, Lab 30%</td>
+                    </tr>
+                    <tr>
+                        <td>३२</td>
+                        <td>समर्थ सुपर स्पेशालीटी चाईल्ड न्युरो केअर सेंटर सन्मान प्रेस्टीज दुसरा मजला नांदेड</td>
+                        <td>डॉ. अश्वीन दरबस्तेवार</td>
+                        <td>न्युरो स्पेशालीस्ट लाहान मुलांचे मेंदु तज्ञ</td>
+                        <td>OPD <del>480</del> -300, IPD-20%, Lab 30%</td>
+                    </tr>
+                    <tr>
+                        <td>३३</td>
+                        <td>जि.ए. गायकवाड हॉस्पिटल बोरबन एरिया धबाले हॉस्पिटलच्या मागे नांदेड</td>
+                        <td>डॉ. अवंती राज गायकवाड</td>
+                        <td>स्त्री रोग तज्ञ दर गुरूवारी मोफत तपासणी १० ते ३ पर्यंत व सोनोग्राफी ५००/-फक्त गुरुवारी राहील
+                        </td>
+                        <td>OPD <del>380</del>-200, IPD-20-25%, नॉर्मल डिलेव्हरी 8000/-, सिझर 20,000/-, गर्भ पिसवि काढणे
+                            20,000/-, मेडिकल व भुलसह तज्ञ</td>
+                    </tr>
+                    <tr>
+                        <td>३४</td>
+                        <td>करडीले हॉस्पिटल</td>
+                        <td>डॉ. प्रतिक बी. करडिले</td>
+                        <td>ज. मेडिसीन</td>
+                        <td>OPD <del>380</del>-200, IPD-20%, Lab 30%</td>
+                    </tr>
+                    <tr>
+                        <td>३५</td>
+                        <td>अभ्युदय लाईफ केअर हॉस्पिटल</td>
+                        <td>डॉ. बाबाराव दारडू पाटिल</td>
+                        <td>मेंदू विकार तज्ञ मायग्रेन, फिटस लकवा विषेश तज्ञ पॅरेलेसीस हात पाय मुंग्या येणे जुणाट डोके
+                            दुःखी हाता पायची कंपन थर कापणे</td>
+                        <td>OPD <del>580</del>-400</td>
+                    </tr>
+                    <tr>
+                        <td>३६</td>
+                        <td>सिद्दीविनायक बाल रुग्णालय शिवाजी नगर, नांदेड</td>
+                        <td>डॉ. अमोल कलेटवाट, डॉ. नारलावार, डॉ. पेंडकर</td>
+                        <td>एम.डी. बाल रोग तज्ञ</td>
+                        <td>OPD <del>380</del>-250, IPD-20%, Lab 20%</td>
+                    </tr>
+                    <tr>
+                        <td>३७</td>
+                        <td>अभ्युदय लाईफ केअर हॉस्पिटल</td>
+                        <td>डॉ. दारकू पाटील</td>
+                        <td>मेंदू विकार तज्ञ</td>
+                        <td>OPD <del>500</del>-400, Folup -300</td>
+                    </tr>
+                    <tr>
+                        <td>३८</td>
+                        <td>विठाई मल्टी स्पेशालीटी हॉस्पिटल डॉ. लेन नांदेड</td>
+                        <td>डॉ. श्रीकांत झंवर, डॉ. संतोष देवडवार, डॉ. उन्केशवर पवार</td>
+                        <td>हृदय रोग तज्ञ</td>
+                        <td>OPD-<del>380</del>-200, IPD-20%, Lab-20%, 2D-Echo-<del>1280</del> -800,
+                            TMT-<del>1380</del>-1000</td>
+                    </tr>
+                    <tr>
+                        <td>३९</td>
+                        <td>अक्षय पॅथॉलोजी डॉ. लेन चित्रा पाटिल हॉस्पिटल नांदेड</td>
+                        <td>डॉ. एच. एम आळणे</td>
+                        <td>एम.डि. पॅथोलेजी</td>
+                        <td>सर्व रक्त तपासणी वर 20 ते 30% सुट</td>
+                    </tr>
+                    <tr>
+                        <td>४०</td>
+                        <td>मराठवाडा डायग्नोस्टीक लॅबरोटरी प्रा.लि. नांदेड सन्मान प्रेस्टीज जि.प.च्या बाजूला पहिला मजला
+                            दु.नं. 51,52,54</td>
+                        <td>डॉ. मुंदडा मॅडम</td>
+                        <td>एम.डि पॅथोलोजी</td>
+                        <td>20 ते 30% सुट</td>
+                    </tr>
+                    <tr>
+                        <td>४१</td>
+                        <td>यशश्री मल्टीस्पेशालीटी हॉस्पिटल डॉ. लेन नांदेड</td>
+                        <td>डॉ. अनंद भगत</td>
+                        <td>कॅन्सर व लॅप्रोस्कोपीक सर्जन</td>
+                        <td>OPD-10%, IPD-10%</td>
+                    </tr>
+                    <tr>
+                        <td>४२</td>
+                        <td>ओंकार पॅथॉलोजी लॅबरोटरीज नांदेड कला मंदिर समोर बरारा टॉवर खाली, नांदेड</td>
+                        <td>डॉ. विजय शेळके</td>
+                        <td>एम.डि. पॅथॉलोजी</td>
+                        <td>Lab 30% पर्यंत</td>
+                    </tr>
+                    <tr>
+                        <td>४३</td>
+                        <td>त्रिमुर्ती डायग्नोस्टीक सेंटर कला मंदिर समोर बरारा टावर, नांदेड</td>
+                        <td>डॉ. प्रमोद झुंजारे</td>
+                        <td>एम.डि रेडिओलॉजीस्ट सोनोग्राफी कलर डॉपलर तज्ञ</td>
+                        <td>20% सुट</td>
+                    </tr>
+                    <tr>
+                        <td>४४</td>
+                        <td>श्री बालाजी हॉस्पिटल चिकलवाडी कॉर्नर नांदेड</td>
+                        <td>डॉ. अतूल देशमुख काहाळेकर</td>
+                        <td>लहान मुलांचे सर्जन न्युरो युरॉलॉजी</td>
+                        <td>OPD <del>350</del>-100 =250, IPD 20%</td>
+                    </tr>
+                    <tr>
+                        <td>४५</td>
+                        <td>श्री लॅबोरटरी बोरबन फॅक्ट्री एरिया अंकुर मॅक्स बिल्डींग, नांदेड</td>
+                        <td>चंद्रकांत उल्पे</td>
+                        <td>रक्त तपासणी SRL & Ranbexy Services Ltd. Mumbai</td>
+                        <td>थॉईराईड <del>580</del>-200, Lab -10%</td>
+                    </tr>
+                    <tr>
+                        <td>४६</td>
+                        <td>अपेक्षा मल्टीस्पेशालीटी हॉस्पिटल जि.प. समोर, नांदेड</td>
+                        <td>डॉ. राघवेंद्र चालिकवार, डॉ. नितीन शेट्टे</td>
+                        <td>न्युरो सर्जन, ऑर्थो सर्जन</td>
+                        <td>OPD <del>580</del>-400, IPD-15%, Oprate -10%, Lab-20%, OPD <del>380</del>-200, IPD-15%,
+                            Oprate -20%, Lab -20%</td>
+                    </tr>
+                    <tr>
+                        <td>४७</td>
+                        <td>सप्तगीरी डायग्नोस्टीक सेंटर डॉ. लेन नांदेड</td>
+                        <td>डॉ. मंजुषा शेळके (पाटिल)</td>
+                        <td>सोनोग्राफि तज्ञ</td>
+                        <td><del>880</del>-600, <del>1080</del>-750</td>
+                    </tr>
+                    <tr>
+                        <td>४८</td>
+                        <td>भगवती डायग्नोस्टीक सेंटर डॉ. लेन नांदेड</td>
+                        <td>डॉ. अजित शिंदे</td>
+                        <td>एम.डि. रेडिओलॉजी</td>
+                        <td>CT/MRI 500/-सुट, सोनोग्राफि 20% सुट</td>
+                    </tr>
+                    <tr>
+                        <td>४९</td>
+                        <td>तुकामाई मल्टी स्पेशालीटी हॉस्पिटल डॉ. लेन नांदेड</td>
+                        <td>डॉ. शितल कुरुंदकर</td>
+                        <td>स्त्री रोग तज्ञ</td>
+                        <td>OPD <del>380</del>-200, IPD-20-25%, नॉर्मल डिलेव्हरी 8000/-, सिझर 22,000/-, गर्भ पिसवि काढणे
+                            22,000/-, मेडिकल व भुलसह तज्ञ</td>
+                    </tr>
+                    <tr>
+                        <td>५०</td>
+                        <td>माने नेत्रालय अॅण्ड डेंटल क्लिनीक हनुमान मंदिर रोड शिवाजी नगर नांदेड</td>
+                        <td>डॉ. तुकाराम माने, डॉ.सौ. रुपाली माने</td>
+                        <td>नेत्र रोग तज्ञ व मोतीबिंदू तज्ञ, दंत रोग तज्ञ</td>
+                        <td>OPD-<del>380</del>-250, ऑपरेशन 20%</td>
+                    </tr>
+                    <tr>
+                        <td>५१</td>
+                        <td>अर्पन रक्त पेढी डॉ. लेन नांदेड</td>
+                        <td>संस्थापक श्री मदन वळसे</td>
+                        <td>बल्ड बँक</td>
+                        <td>डायलेसीस रुग्णासाठी <del>1380</del>-1030, होल बल्ड <del>1350</del> -1130,
+                            RDP-<del>580</del>-500, SDP-<del>9050</del>-9000</td>
+                    </tr>
+                    <tr>
+                        <td>५२</td>
+                        <td>वाघ डायबेटीस स्पेशालीटी सेंटर डॉ.लेन नांदेड</td>
+                        <td>डॉ. अभय आर. वाघ</td>
+                        <td>माधूमेह तज्ञ (शुगर तज्ञ)</td>
+                        <td>OPD <del>380</del>-300, Lab 20%</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+
+        <div class="footer ">
+            &copy; 2025 Axivian Tech Solution. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        const userData = JSON.parse(localStorage.getItem("userDetail"));
+        const display = document.getElementById("dataDisplay");
+        const successMsg = document.getElementById("successMsg");
+
+        if (userData) {
+            // Display username in the message (fallback to "User" if not present)
+            const name = userData.name || userData.fullName || userData.username || "User";
+            successMsg.textContent = `Welcome, ${name}! Your details have been submitted.`;
+
+            for (const [key, value] of Object.entries(userData)) {
+                const row = document.createElement("tr");
+
+                const labelCell = document.createElement("td");
+                labelCell.textContent = key.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase());
+
+                const valueCell = document.createElement("td");
+                valueCell.textContent = value;
+
+                row.appendChild(labelCell);
+                row.appendChild(valueCell);
+                display.appendChild(row);
+            }
+        } else {
+            display.innerHTML = `<tr><td colspan="2">No data found.</td></tr>`;
+        }
+
+        function goBack() {
+            localStorage.removeItem("userDetail");
+            window.location.href = "index.html"; // <-- Change this to your form page
+        }
+
+        function exportToPDF() {
+            // Hide buttons
+            document.querySelectorAll('.no-print').forEach(el => el.style.display = 'none');
+
+            // Remove scrollable class temporarily
+            const scrollable = document.querySelector('.scrollable-body');
+            scrollable.classList.remove('scrollable-body');
+
+            const element = document.querySelector(".container");
+
+            const opt = {
+                margin: 0.5,
+                filename: 'registration-details.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Revert scrollable class
+                scrollable.classList.add('scrollable-body');
+
+                // Show buttons again
+                document.querySelectorAll('.no-print').forEach(el => el.style.display = '');
+            });
+        }
+
+
+    </script>
+</body>
+
+</html>

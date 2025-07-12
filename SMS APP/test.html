@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Registration Form</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+
+      h2 {
+        background-color: #3f51b5;
+        color: white;
+        padding: 10px;
+        text-align: center;
+      }
+
+      form {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 400px;
+        margin: auto;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        width: 100%;
+        background: linear-gradient(to right, #2196f3, #0d47a1);
+        color: white;
+        border: none;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: linear-gradient(to right, #0d47a1, #2196f3);
+      }
+
+      #qrPreview {
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Registration</h2>
+    <form id="regForm">
+      <input type="text" name="name" placeholder="Name" required />
+      <input type="text" name="fileno" placeholder="File No" required />
+      <input type="text" name="address" placeholder="Address" required />
+      <input type="text" name="aadhar" placeholder="Aadhar No." required />
+      <input type="text" name="ration" placeholder="Ration Card No" required />
+      <input type="text" name="mobile" placeholder="Mobile No." required />
+      <input type="number" name="age" placeholder="Age" required />
+      <input type="text" name="occupation" placeholder="Occupation" required />
+      <input type="text" name="receipt" placeholder="Receipt" required />
+      <input type="text" name="qrcode" id="qrcodeField" placeholder="QR Code" readonly />
+      <button type="submit">SAVE</button>
+    </form>
+
+    <div id="qrPreview"></div>
+
+    <!-- Include QR code library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+
+    <script>
+      document.getElementById("regForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const formData = new FormData(form);
+
+        // Convert form data to key-value string
+        const details = {
+          Name: form.name.value,
+          "File No": form.fileno.value,
+          Address: form.address.value,
+          "Aadhar No": form.aadhar.value,
+          "Ration Card": form.ration.value,
+          "Mobile No": form.mobile.value,
+          Age: form.age.value,
+          Occupation: form.occupation.value,
+          Receipt: form.receipt.value,
+        };
+
+        let formattedText = "";
+        for (let key in details) {
+          formattedText += `${key}: ${details[key]}\n`;
+        }
+
+        // ✅ Generate QR Code from formattedText
+        const qr = new QRious({
+          value: formattedText,
+          size: 200,
+        });
+
+        // Fill the QR Code field with Base64 URL
+        document.getElementById("qrcodeField").value = qr.toDataURL();
+
+        // Preview QR Code Image
+        document.getElementById("qrPreview").innerHTML =
+          `<img src="${qr.toDataURL()}" alt="QR Code" />`;
+
+        // You can now proceed to Google Sheets + SMS logic here...
+        alert("✅ QR code generated! Now submitting to Google Sheet and sending SMS...");
+        
+        // NOTE: Continue with your existing fetch calls here if needed...
+        // Submit to Google Sheets or backend
+        // Send SMS logic
+      });
+    </script>
+  </body>
+</html>

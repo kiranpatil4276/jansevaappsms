@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #f0f4f8;
+            color: #333;
+
+        }
+
+        /* 🌐 Navbar */
+        .navbar {
+            background: linear-gradient(to right, #1a237e, #03adec);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo img {
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar .title {
+            font-size: 1.9rem;
+            font-weight: 800;
+            text-align: center;
+            flex: 1;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .navbar .install-btn {
+            background: #e67514;
+            border: none;
+            color: white;
+            padding: 10px 14px;
+            font-size: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .navbar .install-btn:hover {
+            background: #ffffff44;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .navbar .title {
+                margin-top: 10px;
+            }
+
+            .navbar .install-btn {
+                border-radius: 30px;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #3f51b5;
+            margin-bottom: 20px;
+        }
+
+        .logout {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .logout button {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            background: #e0e0e0;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .tab-button.active {
+            background: #3f51b5;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button[type="submit"] {
+            background: #3f51b5;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background: #2c3e91;
+        }
+    </style>
+</head>
+
+<body onload="checkLogin()" style="
+    margin: 0;
+">
+
+    <div class="navbar">
+        <div class="logo">
+            <img src="./logo/WhatsApp Image 2025-07-05 at 20.55.29_ac21f277.png" alt="Logo" />
+        </div>
+        <div class="title">जनकल्याण आरोग्य सेवा</div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button id="installBtn" class="install-btn" style="display: none" title="Install App">
+                <i class="fas fa-download"></i>
+            </button>
+        </div>
+        <div class="logout">
+            <button onclick="logout()">
+                <i class="fas fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+
+    </div>
+
+
+
+    <h1>👨‍⚕️ Admin Dashboard</h1>
+
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab('doctorTab')">Doctor Appointment</button>
+        <button class="tab-button" onclick="openTab('dabbaTab')">Dabbewala Appointment</button>
+    </div>
+
+    <div id="doctorTab" class="tab-content active">
+        <form id="doctorForm">
+            <label>Patient Name</label>
+            <input type="text" name="patientName" required />
+
+            <label>Patient Complain</label>
+            <textarea name="complain" required></textarea>
+
+            <label>Hospital Name</label>
+            <input type="text" name="hospitalName" required />
+
+            <label>Doctor Name</label>
+            <input type="text" name="doctorName" required />
+
+            <label>Mobile Number</label>
+            <input type="text" name="mobile" pattern="\d{10}" maxlength="10" required />
+
+            <button type="submit">Submit Doctor Appointment</button>
+        </form>
+    </div>
+
+    <div id="dabbaTab" class="tab-content">
+        <form id="dabbaForm">
+            <label>Patient Name</label>
+            <input type="text" name="patientName" required />
+
+            <label>Hospital Name</label>
+            <input type="text" name="hospitalName" required />
+
+            <label>Bed No / Room No</label>
+            <input type="text" name="bedRoom" required />
+
+            <button type="submit">Submit Dabbewala Appointment</button>
+        </form>
+    </div>
+
+    <script>
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        document.getElementById("doctorForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("✅ Doctor Appointment Submitted!");
+            this.reset();
+        });
+
+        document.getElementById("dabbaForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            alert("✅ Dabbewala Appointment Submitted!");
+            this.reset();
+        });
+
+        function checkLogin() {
+            if (localStorage.getItem("isLoggedIn") !== "true") {
+                alert("Please login first.");
+                window.location.href = "login.html";
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>

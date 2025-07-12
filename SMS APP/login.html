@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* 🌐 Navbar */
+    .navbar {
+      background: linear-gradient(to right, #1a237e, #03adec);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar .logo img {
+      height: 50px;
+      margin-right: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar .title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      text-align: center;
+      flex: 1;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    .navbar .install-btn {
+      background: #e67514;
+      border: none;
+      color: white;
+      padding: 10px 14px;
+      font-size: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .navbar .install-btn:hover {
+      background: #ffffff44;
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+
+      .navbar .title {
+        margin-top: 10px;
+      }
+
+      .navbar .install-btn {
+        border-radius: 30px;
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    }
+
+    /* 🧾 Login Box */
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      margin: 60px auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #3f51b5;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 20px;
+      background: #3f51b5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #2c3e91;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🚀 Navbar -->
+  <div class="navbar">
+    <div class="logo">
+      <img src="./logo/WhatsApp Image 2025-07-05 at 20.55.29_ac21f277.png" alt="Logo" />
+    </div>
+    <div class="title">जनकल्याण आरोग्य सेवा</div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button
+        id="installBtn"
+        class="install-btn"
+        style="display: none"
+        title="Install App"
+      >
+        <i class="fas fa-download"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 🔐 Login Box -->
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+
+      if (user === "admin" && pass === "123") {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "admincode.html";
+      } else {
+        alert("❌ Invalid credentials!");
+      }
+    });
+
+    // 📲 PWA Install Button (Optional)
+    let deferredPrompt;
+    const installBtn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = "block";
+    });
+
+    installBtn.addEventListener("click", async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === "accepted") {
+          console.log("✅ App installed");
+          installBtn.style.display = "none";
+        } else {
+          console.log("❌ App install declined");
+        }
+        deferredPrompt = null;
+      }
+    });
+  </script>
+</body>
+</html>
